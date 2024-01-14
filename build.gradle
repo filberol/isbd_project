@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.16'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//Jstl tags
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
 }

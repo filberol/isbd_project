@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/test")
 public class TestPage {
+    @Autowired
     WorkerService service;
-
-    TestPage(WorkerService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public String viewWorkers(ModelMap model) {
