@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-<h1>Username: ${principal.name}</h1>
+<h2>Username: ${userDetails.name}</h2>
+<h3>Authorities: ${userDetails.authorities}</h3>
+<h3>Session: ${userDetails.details.sessionId}</h3>
 </body>
 </html>

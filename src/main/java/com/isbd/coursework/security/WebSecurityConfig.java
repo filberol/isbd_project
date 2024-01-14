@@ -23,13 +23,18 @@ public class WebSecurityConfig {
     @Bean
     @SuppressWarnings("deprecation")
     public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("admin")
-                        .password("admin")
-                        .roles("ADMIN")
-                        .build();
-        userDetailsManager.createUser(user);
+        UserDetails adminUser = User.withDefaultPasswordEncoder()
+                .username("admin")
+                .password("admin")
+                .roles("ADMIN", "BRIGADE", "USER")
+                .build();
+        UserDetails brigadeUser = User.withDefaultPasswordEncoder()
+                .username("brigade")
+                .password("brigade")
+                .roles("BRIGADE", "USER")
+                .build();
+        userDetailsManager.createUser(adminUser);
+        userDetailsManager.createUser(brigadeUser);
         return userDetailsManager;
     }
 
@@ -43,9 +48,11 @@ public class WebSecurityConfig {
                 .disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
-                        .requestMatchers("/register").permitAll()
-                        .requestMatchers("/userlist").hasRole("ADMIN")
-                        .anyRequest().permitAll()
+                        .requestMatchers("/register", "/login", "/logout").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/brigade/**").hasRole("BRIGADE")
+                        .requestMatchers("/api/**", "/home/**").authenticated()
+                        .anyRequest().authenticated()
                 ).formLogin(withDefaults());
         return http.build();
     }
