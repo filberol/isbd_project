@@ -22,10 +22,11 @@ public class RailwayStationService {
     }
 
     public List<RailwayStation> getAllStations() {
-        return getAllStations(100);
+        return getAllStations(10);
     }
 
     public List<RailwayStation> getAllStations(Integer limit) {
+        if (limit == 0) return null;
         String selectStatement = "SELECT * FROM railway_station LIMIT ?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
@@ -42,6 +43,7 @@ public class RailwayStationService {
     }
 
     public List<RailwayStation> getStationNameLike(String name) {
+        if (name == null) return null;
         String selectStatement = "SELECT * FROM railway_station WHERE name LIKE ?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
@@ -58,6 +60,7 @@ public class RailwayStationService {
     }
 
     public List<RailwaySegment> getSegmentsRelated(Integer id) {
+        if (id == 0) return null;
         String selectStatement = "SELECT * FROM railway_segment WHERE from_rs=?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
@@ -74,6 +77,7 @@ public class RailwayStationService {
     }
 
     public List<RailwayStation> getStationsRelated(Integer id) {
+        if (id == 0) return null;
         String selectStatement = "SELECT * FROM railway_station WHERE id IN" +
                 "(SELECT id FROM railway_segment WHERE from_rs=?);";
         try {

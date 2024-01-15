@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/test")
+//TODO Get rid of page
 public class TestPage {
     @Autowired
     RailwayStationService service;
