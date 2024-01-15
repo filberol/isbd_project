@@ -22,10 +22,12 @@ public class RailwayStationService implements RailwayStationApi {
         this.db = db.getConnection();
     }
 
+    @Override
     public List<RailwayStation> getAllStations() {
         return getAllStations(10);
     }
 
+    @Override
     public List<RailwayStation> getAllStations(Integer limit) {
         if (limit == 0) return null;
         String selectStatement = "SELECT * FROM railway_station LIMIT ?;";
@@ -43,6 +45,7 @@ public class RailwayStationService implements RailwayStationApi {
         }
     }
 
+    @Override
     public List<RailwayStation> getStationNameLike(String name) {
         if (name == null) return null;
         String selectStatement = "SELECT * FROM railway_station WHERE name LIKE ?;";
@@ -60,6 +63,7 @@ public class RailwayStationService implements RailwayStationApi {
         }
     }
 
+    @Override
     public List<RailwaySegment> getSegmentsRelated(Integer id) {
         if (id == 0) return null;
         String selectStatement = "SELECT * FROM railway_segment WHERE from_rs=?;";
@@ -77,6 +81,7 @@ public class RailwayStationService implements RailwayStationApi {
         }
     }
 
+    @Override
     public List<RailwayStation> getStationsRelated(Integer id) {
         if (id == 0) return null;
         String selectStatement = "SELECT * FROM railway_station WHERE id IN" +

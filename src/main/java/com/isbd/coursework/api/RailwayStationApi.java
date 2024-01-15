@@ -6,16 +6,9 @@ import com.isbd.coursework.entities.RailwayStation;
 import java.util.List;
 
 public interface RailwayStationApi {
-    public List<RailwayStation> getAllStations();
-
-    public List<RailwayStation> getAllStations(Integer limit);
-
-    public List<RailwayStation> getStationNameLike(String name);
-
-    public List<RailwaySegment> getSegmentsRelated(Integer id);
-
-    public List<RailwayStation> getStationsRelated(Integer id);
-
-
-
-    }
+    List<RailwayStation> getAllStations();
+    List<RailwayStation> getAllStations(Integer limit);
+    List<RailwayStation> getStationNameLike(String name);
+    List<RailwaySegment> getSegmentsRelated(Integer id);
+    List<RailwayStation> getStationsRelated(Integer id);
+}
