@@ -3,12 +3,14 @@ package com.isbd.coursework.services;
 import com.isbd.coursework.api.CompanyApi;
 import com.isbd.coursework.database.DbConnection;
 import com.isbd.coursework.entities.Company;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Service
 public class CompanyService implements CompanyApi {
 
     private final Connection db;

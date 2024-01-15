@@ -24,7 +24,7 @@ public class RepairTeamService implements RepairTeamApi {
     @Override
     public List<RepairTeamMember> getRepairTeamMembersById(Integer teamId) {
         if (teamId == 0) return null;
-        String selectStatement = "SELECT * FROM repair_team_member where repair_team_id=?;";
+        String selectStatement = "SELECT * FROM repair_team_member WHERE repair_team_id=?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, teamId);
@@ -42,8 +42,8 @@ public class RepairTeamService implements RepairTeamApi {
     @Override
     public RepairTeamMember getTeamHeadById(Integer teamId) {
         if (teamId == 0) return null;
-        String selectStatement = "SELECT * FROM repair_team_member where id=" +
-                "(SELECT team_head_id FROM repair_team where id=?);";
+        String selectStatement = "SELECT * FROM repair_team_member WHERE id=" +
+                "(SELECT team_head_id FROM repair_team WHERE id=?);";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, teamId);
@@ -57,7 +57,7 @@ public class RepairTeamService implements RepairTeamApi {
     @Override
     public List<Integer> getTeamIdsByOwner(Integer ownerId) {
         if (ownerId == 0) return null;
-        String selectStatement = "SELECT * FROM repair_team where owner_id=?;";
+        String selectStatement = "SELECT * FROM repair_team WHERE owner_id=?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, ownerId);

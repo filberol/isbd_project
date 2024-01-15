@@ -1,23 +1,25 @@
 package com.isbd.coursework.entities;
 
+import com.isbd.coursework.entities.enums.FaultClass;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public record SiteFaultFixation(
         Integer id,
+        Integer segmentFaultId,
         Integer routeId,
-        Timestamp plannedAt,
-        Timestamp departedAt,
-        Timestamp arrivedAt
+        Timestamp foundAt,
+        FaultClass faultClass
 ) {
     public static SiteFaultFixation fromSet(ResultSet set) throws SQLException {
         return new SiteFaultFixation(
                 set.getInt("id"),
+                set.getInt("segment_fault_id"),
                 set.getInt("route_id"),
-                set.getTimestamp("planned_at"),
-                set.getTimestamp("departed_at"),
-                set.getTimestamp("arrived_at_at")
+                set.getTimestamp("found_at"),
+                FaultClass.valueOf(set.getString("fault_class"))
         );
     }
 }

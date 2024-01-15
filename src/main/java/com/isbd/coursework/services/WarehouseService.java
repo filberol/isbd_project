@@ -54,7 +54,7 @@ public class WarehouseService implements WarehouseApi {
     @Override
     public List<WarehouseResourceAllocation> getResourceAllocationsBetween(Integer warehouseId, Timestamp from, Timestamp to) {
         if (warehouseId == 0) return null;
-        String selectStatement = "SELECT * FROM warehouse_resource_allocation WHERE warehouse_id=?" +
+        String selectStatement = "SELECT * FROM warehouse_resource_allocation WHERE warehouse_id=? " +
                 "AND allocated_at > ? AND allocated_at < ?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
