@@ -1,5 +1,6 @@
 package com.isbd.coursework.services;
 
+import com.isbd.coursework.api.RailwayStationApi;
 import com.isbd.coursework.database.DbConnection;
 import com.isbd.coursework.entities.RailwaySegment;
 import com.isbd.coursework.entities.RailwayStation;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RailwayStationService {
+public class RailwayStationService implements RailwayStationApi {
 
     private final Connection db;
 
