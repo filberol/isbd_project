@@ -1,12 +1,23 @@
 package com.isbd.coursework.entities;
 
-import java.time.ZonedDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public record ResourceTransportation(
         Integer id,
         Integer fromWarehouseId,
         Integer toWarehouseId,
-        ZonedDateTime startAt,
-        ZonedDateTime finishAt
+        Timestamp startAt,
+        Timestamp finishAt
 ) {
+    public static ResourceTransportation fromSet(ResultSet set) throws SQLException {
+        return new ResourceTransportation(
+                set.getInt("id"),
+                set.getInt("from_warehouse_id"),
+                set.getInt("to_warehouse_id"),
+                set.getTimestamp("start_at"),
+                set.getTimestamp("finish_at")
+        );
+    }
 }

@@ -10,7 +10,7 @@ import java.security.Principal;
 @Controller
 public class UserManagement {
 
-    @GetMapping("/me")
+    @GetMapping("/home/me")
     public String showUser(Model model, Principal principal) {
         UsernamePasswordAuthenticationToken userDetails = (UsernamePasswordAuthenticationToken) principal;
         model.addAttribute("userDetails", userDetails);

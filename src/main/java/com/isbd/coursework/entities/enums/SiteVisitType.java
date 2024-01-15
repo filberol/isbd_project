@@ -1,8 +1,8 @@
 package com.isbd.coursework.entities.enums;
 
 public enum SiteVisitType {
-    INSPECTION("inspection"),
-    REPAIR("repair");
+    inspection("inspection"),
+    repair("repair");
 
     final String name;
     SiteVisitType(String name) {

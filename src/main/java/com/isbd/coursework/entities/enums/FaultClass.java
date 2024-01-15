@@ -1,8 +1,8 @@
 package com.isbd.coursework.entities.enums;
 
 public enum FaultClass {
-    CRITICAL("critical"),
-    NON_CRITICAL("non_critical");
+    critical("critical"),
+    non_critical("non_critical");
 
     final String name;
     FaultClass(String name) {

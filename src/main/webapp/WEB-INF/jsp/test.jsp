@@ -10,8 +10,8 @@
 <h3>
     Some content
 </h3>
-<c:forEach items="${workers}" var="worker">
-    <h1>${worker}</h1>
+<c:forEach items="${stations}" var="station">
+    <h1>${station.name()}</h1>
 </c:forEach>
 </body>
 </html>

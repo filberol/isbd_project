@@ -1,12 +1,23 @@
 package com.isbd.coursework.entities;
 
-import java.time.ZonedDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public record SiteFaultFixation(
         Integer id,
         Integer routeId,
-        ZonedDateTime plannedAt,
-        ZonedDateTime departedAt,
-        ZonedDateTime arrivedAt
+        Timestamp plannedAt,
+        Timestamp departedAt,
+        Timestamp arrivedAt
 ) {
+    public static SiteFaultFixation fromSet(ResultSet set) throws SQLException {
+        return new SiteFaultFixation(
+                set.getInt("id"),
+                set.getInt("route_id"),
+                set.getTimestamp("planned_at"),
+                set.getTimestamp("departed_at"),
+                set.getTimestamp("arrived_at_at")
+        );
+    }
 }

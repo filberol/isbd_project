@@ -1,9 +1,9 @@
 package com.isbd.coursework.entities.enums;
 
 public enum FaultStatus {
-    NOT_REPAIRED("not_repaired"),
-    IN_REPAIR("in_repair"),
-    REPAIRED("repaired");
+    not_repaired("not_repaired"),
+    in_repair("in_repair"),
+    repaired("repaired");
 
     final String name;
     FaultStatus(String name) {
