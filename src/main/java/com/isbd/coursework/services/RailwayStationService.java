@@ -99,4 +99,19 @@ public class RailwayStationService implements RailwayStationApi {
             return null;
         }
     }
+
+    @Override
+    public RailwayStation getStationById(Integer stationId) {
+        if (stationId == 0) return null;
+        String selectStatement = "SELECT * FROM railway_station WHERE id = ?;";
+        try {
+            PreparedStatement st = db.prepareStatement(selectStatement);
+            st.setInt(1, stationId);
+            ResultSet set = st.executeQuery();
+            set.next();
+            return RailwayStation.fromSet(set);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 }

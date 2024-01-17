@@ -103,7 +103,7 @@ public class RepairTeamRoutesProcesses {
 
     @PostMapping
     @Secured({"ROLE_ADMIN", "ROLE_BRIGADE"})
-    @RequestMapping("/finish")
+    @RequestMapping("/start")
     public ResponseEntity<String> startRepairTeamRoute(
             @RequestParam Integer teamId,
             @RequestParam Timestamp departed
