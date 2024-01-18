@@ -4,10 +4,7 @@ import com.isbd.coursework.api.CompanyApi;
 import com.isbd.coursework.api.RailwayStationApi;
 import com.isbd.coursework.api.RepairBaseApi;
 import com.isbd.coursework.api.WarehouseApi;
-import com.isbd.coursework.entities.Company;
-import com.isbd.coursework.entities.RailwayStation;
-import com.isbd.coursework.entities.RepairBase;
-import com.isbd.coursework.entities.Warehouse;
+import com.isbd.coursework.entities.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,12 +43,19 @@ public class IndexPage {
         List<RailwayStation> related = railwayStationApi.getStationsRelated(stationId);
         Warehouse warehouse = warehouseApi.getWarehouseByStationId(stationId);
         RepairBase repairBase = repairBaseApi.getRepairBaseByStationId(stationId);
-        Company company = companyApi.getCompanyById(station.ownerId());
+        if (station != null) {
+            Company company = companyApi.getCompanyById(station.ownerId());
+            model.addAttribute("company", company);
+
+        }
+        if (warehouse != null) {
+            List<WarehouseResourceAllocation> resources = warehouseApi.getResourceAllocations(warehouse.id());
+            model.addAttribute("resources", resources);
+        }
         model.addAttribute("station", station);
         model.addAttribute("related", related);
         model.addAttribute("warehouse", warehouse);
         model.addAttribute("repairBase", repairBase);
-        model.addAttribute("company", company);
         return "index";
     }
 }

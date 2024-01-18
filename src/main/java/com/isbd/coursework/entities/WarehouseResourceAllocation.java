@@ -14,7 +14,7 @@ public record WarehouseResourceAllocation(
         return new WarehouseResourceAllocation(
                 set.getInt("id"),
                 set.getInt("warehouse_id"),
-                set.getInt("resource_allocated_km"),
+                set.getInt("resources_allocated_km"),
                 set.getTimestamp("allocated_at")
         );
     }

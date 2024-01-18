@@ -6,67 +6,24 @@
     <title>Атлант расправил плечи: Курсовая работа - Чернова Анна, Миху Вадим - P33301</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://d3js.org/d3.v6.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        #container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #left-panel,
-        #right-panel {
-            padding: 10px;
-            width: 25vw;
-            height: 100%;
-            background-color: lightgray;
-        }
-
-        #center {
-            flex: 1;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #search-bar1,
-        #search-bar2 {
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            height: 50px;
-            background-color: lightblue;
-            margin-bottom: 10px;
-        }
-
-        #canvas {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            background-color: white;
-        }
-    </style>
+    <jsp:include page="jsp_style.jsp"/>
 </head>
 <body>
 <div id="container">
     <div id="left-panel">
         <h2>${station.name()}</h2>
         <div>Owner: ${company.name()}</div>
+        <hr/>
         <c:if test="${warehouse != null}">
             <h3>Warehouse</h3>
             <div>Resources available: ${warehouse.resourceAvailableKm()}</div>
+            <div class="table-container">
+                <jsp:include page="resource_allocation.jsp">
+                    <jsp:param name="resources" value="${resources}"/>
+                </jsp:include>
+            </div>
         </c:if>
+        <hr/>
         <c:if test="${repairBase != null}">
             <h3>Repair base</h3>
             <div>Team capacity: ${repairBase.sizeTeams()}</div>
