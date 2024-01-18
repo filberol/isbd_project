@@ -48,10 +48,9 @@ public class RailwayStationService implements RailwayStationApi {
     @Override
     public List<RailwayStation> getStationNameLike(String name) {
         if (name == null) return null;
-        String selectStatement = "SELECT * FROM railway_station WHERE name LIKE ?;";
+        String selectStatement = String.format("SELECT * FROM railway_station WHERE name LIKE '%%%s%%';", name);
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
-            st.setString(1, name);
             List<RailwayStation> stations = new ArrayList<>();
             ResultSet set = st.executeQuery();
             while (set.next()) {

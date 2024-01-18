@@ -38,29 +38,34 @@ public class IndexPage {
     @GetMapping
     public String viewPanel(
             @RequestParam(defaultValue = "1") Integer stationId,
+            @RequestParam(defaultValue = "") String stationName,
             Model model
     ) {
-        RailwayStation station = railwayStationApi.getStationById(stationId);
-        List<RailwayStation> related = railwayStationApi.getStationsRelated(stationId);
-        Warehouse warehouse = warehouseApi.getWarehouseByStationId(stationId);
-        RepairBase repairBase = repairBaseApi.getRepairBaseByStationId(stationId);
+        RailwayStation station;
+        if (stationName.equals("")) {
+            station = railwayStationApi.getStationById(stationId);
+        } else {
+            station = railwayStationApi.getStationNameLike(stationName).get(0);
+        }
         if (station != null) {
+            List<RailwayStation> related = railwayStationApi.getStationsRelated(station.id());
+            Warehouse warehouse = warehouseApi.getWarehouseByStationId(station.id());
+            RepairBase repairBase = repairBaseApi.getRepairBaseByStationId(station.id());
             Company company = companyApi.getCompanyById(station.ownerId());
+            model.addAttribute("related", related);
+            model.addAttribute("warehouse", warehouse);
+            model.addAttribute("repairBase", repairBase);
             model.addAttribute("company", company);
-
-        }
-        if (warehouse != null) {
-            List<WarehouseResourceAllocation> resources = warehouseApi.getResourceAllocations(warehouse.id());
-            model.addAttribute("resources", resources);
-        }
-        if (repairBase != null) {
-            List<TeamRouteDescription> routes = routesApi.getTeamRouteDescriptionsFromBase(repairBase.id());
-            model.addAttribute("routes", routes);
+            if (warehouse != null) {
+                List<WarehouseResourceAllocation> resources = warehouseApi.getResourceAllocations(warehouse.id());
+                model.addAttribute("resources", resources);
+            }
+            if (repairBase != null) {
+                List<TeamRouteDescription> routes = routesApi.getTeamRouteDescriptionsFromBase(repairBase.id());
+                model.addAttribute("routes", routes);
+            }
         }
         model.addAttribute("station", station);
-        model.addAttribute("related", related);
-        model.addAttribute("warehouse", warehouse);
-        model.addAttribute("repairBase", repairBase);
         return "index";
     }
 }

@@ -13,7 +13,7 @@
     List<TeamRouteDescription> currentPageItems = routes.subList(startIndex, endIndex);
 %>
 
-<h4>Repair team routes from base</h4>
+
 <table>
     <thead>
     <tr>

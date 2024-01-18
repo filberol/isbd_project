@@ -12,7 +12,6 @@
     List<WarehouseResourceAllocation> currentPageItems = resources.subList(startIndex, endIndex);
 %>
 
-<h4>Resource allocation</h4>
 <table>
     <thead>
     <tr>

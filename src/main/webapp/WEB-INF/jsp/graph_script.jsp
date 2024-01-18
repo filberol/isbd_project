@@ -1,11 +1,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 
-<jsp:useBean id="station" scope="request" type="com.isbd.coursework.entities.RailwayStation"/>
-<jsp:useBean id="warehouse" scope="request" type="com.isbd.coursework.entities.Warehouse"/>
-<jsp:useBean id="repairBase" scope="request" type="com.isbd.coursework.entities.RepairBase"/>
-<jsp:useBean id="related" scope="request" type="java.util.List"/>
-
 <script>
   const nodes = [
     <c:if test="${station != null}">

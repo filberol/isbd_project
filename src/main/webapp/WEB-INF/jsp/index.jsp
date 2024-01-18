@@ -18,6 +18,7 @@
             <h3>Warehouse</h3>
             <div>Resources available: ${warehouse.resourceAvailableKm()}</div>
             <div class="table-container">
+                <h4>Resource allocation</h4>
                 <jsp:include page="resource_allocation.jsp">
                     <jsp:param name="page" value="1"/>
                 </jsp:include>
@@ -29,14 +30,20 @@
             <div>Team capacity: ${repairBase.sizeTeams()}</div>
             <div>Teams hosted: ${repairBase.currTeamsHosted()}</div>
             <div class="table-container">
-                <jsp:include page="repair_team_routes.jsp"/>
+                <h4>Last repair team routes from base</h4>
+                <jsp:include page="repair_team_routes.jsp">
+                    <jsp:param name="page" value="1"/>
+                </jsp:include>
             </div>
         </c:if>
     </div>
     <div id="center">
         <div id="search-bar1">
-            <label for="station_search">Station name</label>
-            <input type="text" id="station_search" placeholder="Type station name">
+            <form method="get" action="/home">
+                <label for="station_search">Station name</label>
+                <input type="text" id="station_search" name="stationName" placeholder="Type station name">
+                <button type="submit">Search</button>
+            </form>
         </div>
         <div id="search-bar2">
             <label for="brigade_search">Brigade name</label>
@@ -50,36 +57,7 @@
 </div>
 
 <jsp:include page="graph_script.jsp"/>
-
-<script>
-    const gutter = document.querySelector(".resizablePanel");
-
-
-    function resizer(e) {
-
-        window.addEventListener('mousemove', mousemove);
-        window.addEventListener('mouseup', mouseup);
-
-        let prevX = e.x;
-        const leftPanel = gutter.getBoundingClientRect();
-
-
-        function mousemove(e) {
-            let newX = prevX - e.x;
-            gutter.style.width = leftPanel.width - newX + "px";
-        }
-
-        function mouseup() {
-            window.removeEventListener('mousemove', mousemove);
-            window.removeEventListener('mouseup', mouseup);
-
-        }
-
-
-    }
-
-    gutter.addEventListener('mousedown', resizer);
-</script>
+<jsp:include page="drag_script.jsp"/>
 
 </body>
 </html>
