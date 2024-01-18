@@ -56,7 +56,7 @@
   }
 
   th, td {
-      border: 1px solid #dddddd;
+      border: 1px solid black;
       text-align: left;
       padding: 8px;
   }
@@ -66,7 +66,7 @@
   }
 
   .table-container {
-      max-height: 300px;
+      max-height: 350px;
       overflow-y: auto;
   }
 

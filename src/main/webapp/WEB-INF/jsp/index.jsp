@@ -10,7 +10,7 @@
 </head>
 <body>
 <div id="container">
-    <div id="left-panel">
+    <div id="left-panel" class="resizablePanel">
         <h2>${station.name()}</h2>
         <div>Owner: ${company.name()}</div>
         <hr/>
@@ -19,7 +19,7 @@
             <div>Resources available: ${warehouse.resourceAvailableKm()}</div>
             <div class="table-container">
                 <jsp:include page="resource_allocation.jsp">
-                    <jsp:param name="resources" value="${resources}"/>
+                    <jsp:param name="page" value="1"/>
                 </jsp:include>
             </div>
         </c:if>
@@ -28,6 +28,9 @@
             <h3>Repair base</h3>
             <div>Team capacity: ${repairBase.sizeTeams()}</div>
             <div>Teams hosted: ${repairBase.currTeamsHosted()}</div>
+            <div class="table-container">
+                <jsp:include page="repair_team_routes.jsp"/>
+            </div>
         </c:if>
     </div>
     <div id="center">
@@ -45,118 +48,37 @@
     </div>
     <div id="right-panel"></div>
 </div>
+
+<jsp:include page="graph_script.jsp"/>
+
 <script>
-    // Sample graph data
-    const nodes = [
-        <c:if test="${station != null}">
-        {id: 1, label: '${station.name()}'},
-        </c:if>
-        <c:if test="${warehouse != null}">
-        {id: 2, label: 'Warehouse'},
-        </c:if>
-        <c:if test="${repairBase != null}">
-        {id: 3, label: 'Repair base'},
-        </c:if>
-        <c:forEach items="${related}" var="r_station" varStatus="loop_stat">
-        {id: ${loop_stat.index + 4}, label: '${r_station.name()}'},
-        </c:forEach>
-    ];
+    const gutter = document.querySelector(".resizablePanel");
 
-    const links = [
-        <c:if test="${warehouse != null}">
-        {source: 2, target: 1},
-        </c:if>
-        <c:if test="${repairBase != null}">
-        {source: 3, target: 1},
-        </c:if>
-        <c:forEach items="${related}" var="r_station" varStatus="loop_stat">
-        {source: ${loop_stat.index + 4}, target: 1},
-        </c:forEach>
-    ];
 
-    drag = simulation => {
+    function resizer(e) {
 
-        function dragstarted(event, d) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
+        window.addEventListener('mousemove', mousemove);
+        window.addEventListener('mouseup', mouseup);
+
+        let prevX = e.x;
+        const leftPanel = gutter.getBoundingClientRect();
+
+
+        function mousemove(e) {
+            let newX = prevX - e.x;
+            gutter.style.width = leftPanel.width - newX + "px";
         }
 
-        function dragged(event, d) {
-            d.fx = event.x;
-            d.fy = event.y;
+        function mouseup() {
+            window.removeEventListener('mousemove', mousemove);
+            window.removeEventListener('mouseup', mouseup);
+
         }
 
-        function dragended(event, d) {
-            if (!event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-        }
 
-        return d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
     }
 
-    // Create an SVG container
-    const svg = d3.select('svg');
-
-    // Create a force simulation
-    const simulation = d3.forceSimulation(nodes)
-        .force('link', d3.forceLink(links).id(d => d.id))
-        .force('charge', d3.forceManyBody().strength(-5000))
-        .force('center', d3.forceCenter(250, 250));
-
-    // Draw links
-    const link = svg.selectAll('line')
-        .data(links)
-        .enter().append('line')
-        .attr('stroke', 'black');
-
-    // Draw nodes
-    const node = svg.selectAll('circle')
-        .data(nodes)
-        .enter().append('circle')
-        .attr('r', 20)
-        .attr('fill', d => colorScale(d))
-        .call(drag(simulation));
-
-    // Add labels to nodes
-    const label = svg.selectAll('text')
-        .data(nodes)
-        .enter().append('text')
-        .text(d => d.label)
-        .attr('text-anchor', 'right')
-        .attr('dy', 4)
-        .call(drag(simulation));
-
-
-    // Update the simulation on each tick
-    simulation.on('tick', () => {
-        link
-            .attr('x1', d => d.source.x)
-            .attr('y1', d => d.source.y)
-            .attr('x2', d => d.target.x)
-            .attr('y2', d => d.target.y);
-
-        node
-            .attr('cx', d => d.x)
-            .attr('cy', d => d.y);
-
-        label
-            .attr('x', d => d.x)
-            .attr('y', d => d.y);
-    });
-
-    function colorScale(label) {
-        if (label.label === '${station.name()}') return 'green'
-        if (label.label === 'Warehouse') return 'cyan'
-        if (label.label === 'Repair base') return 'lightblue'
-        return 'grey'
-    }
-
-
+    gutter.addEventListener('mousedown', resizer);
 </script>
 
 </body>
