@@ -12,7 +12,7 @@ public record Warehouse(
         return new Warehouse(
                 set.getInt("id"),
                 set.getInt("station_id"),
-                set.getInt("resource_available_km")
+                set.getInt("resources_available_km")
         );
     }
 }

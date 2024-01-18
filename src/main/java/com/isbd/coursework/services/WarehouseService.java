@@ -27,6 +27,7 @@ public class WarehouseService implements WarehouseApi {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, stationId);
             ResultSet set = st.executeQuery();
+            set.next();
             return Warehouse.fromSet(set);
         } catch (SQLException e) {
             return null;

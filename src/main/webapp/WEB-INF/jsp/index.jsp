@@ -1,4 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <html lang="ru-RU">
 <head>
@@ -24,6 +25,7 @@
 
         #left-panel,
         #right-panel {
+            padding: 10px;
             width: 25vw;
             height: 100%;
             background-color: lightgray;
@@ -38,6 +40,7 @@
 
         #search-bar1,
         #search-bar2 {
+            padding: 5px;
             display: flex;
             align-items: center;
             width: 100%;
@@ -57,7 +60,19 @@
 </head>
 <body>
 <div id="container">
-    <div id="left-panel"></div>
+    <div id="left-panel">
+        <h2>${station.name()}</h2>
+        <div>Owner: ${company.name()}</div>
+        <c:if test="${warehouse != null}">
+            <h3>Warehouse</h3>
+            <div>Resources available: ${warehouse.resourceAvailableKm()}</div>
+        </c:if>
+        <c:if test="${repairBase != null}">
+            <h3>Repair base</h3>
+            <div>Team capacity: ${repairBase.sizeTeams()}</div>
+            <div>Teams hosted: ${repairBase.currTeamsHosted()}</div>
+        </c:if>
+    </div>
     <div id="center">
         <div id="search-bar1">
             <label for="station_search">Station name</label>
@@ -68,8 +83,7 @@
             <input type="text" id="brigade_search" placeholder="Type brigade name">
         </div>
         <div id="canvas">
-            Displaying station with name ${station.name()}
-            <svg width="500" height="500"></svg>
+            <svg width="550" height="550"></svg>
         </div>
     </div>
     <div id="right-panel"></div>
@@ -77,15 +91,56 @@
 <script>
     // Sample graph data
     const nodes = [
-        { id: 1, label: '${station.name()}'},
-        { id: 2, label: 'Node 2' },
-        { id: 3, label: 'Node 3' },
+        <c:if test="${station != null}">
+        {id: 1, label: '${station.name()}'},
+        </c:if>
+        <c:if test="${warehouse != null}">
+        {id: 2, label: 'Warehouse'},
+        </c:if>
+        <c:if test="${repairBase != null}">
+        {id: 3, label: 'Repair base'},
+        </c:if>
+        <c:forEach items="${related}" var="r_station" varStatus="loop_stat">
+        {id: ${loop_stat.index + 4}, label: '${r_station.name()}'},
+        </c:forEach>
     ];
 
     const links = [
-        { source: 1, target: 2 },
-        { source: 2, target: 3 },
+        <c:if test="${warehouse != null}">
+        {source: 2, target: 1},
+        </c:if>
+        <c:if test="${repairBase != null}">
+        {source: 3, target: 1},
+        </c:if>
+        <c:forEach items="${related}" var="r_station" varStatus="loop_stat">
+        {source: ${loop_stat.index + 4}, target: 1},
+        </c:forEach>
     ];
+
+    drag = simulation => {
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        return d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+    }
 
     // Create an SVG container
     const svg = d3.select('svg');
@@ -107,7 +162,8 @@
         .data(nodes)
         .enter().append('circle')
         .attr('r', 20)
-        .attr('fill', 'blue')
+        .attr('fill', d => colorScale(d))
+        .call(drag(simulation));
 
     // Add labels to nodes
     const label = svg.selectAll('text')
@@ -115,7 +171,9 @@
         .enter().append('text')
         .text(d => d.label)
         .attr('text-anchor', 'right')
-        .attr('dy', 4);
+        .attr('dy', 4)
+        .call(drag(simulation));
+
 
     // Update the simulation on each tick
     simulation.on('tick', () => {
@@ -133,6 +191,15 @@
             .attr('x', d => d.x)
             .attr('y', d => d.y);
     });
+
+    function colorScale(label) {
+        if (label.label === '${station.name()}') return 'green'
+        if (label.label === 'Warehouse') return 'cyan'
+        if (label.label === 'Repair base') return 'lightblue'
+        return 'grey'
+    }
+
+
 </script>
 
 </body>

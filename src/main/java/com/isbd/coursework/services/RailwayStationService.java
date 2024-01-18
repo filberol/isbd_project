@@ -85,7 +85,7 @@ public class RailwayStationService implements RailwayStationApi {
     public List<RailwayStation> getStationsRelated(Integer id) {
         if (id == 0) return null;
         String selectStatement = "SELECT * FROM railway_station WHERE id IN" +
-                "(SELECT id FROM railway_segment WHERE from_rs=?);";
+                "(SELECT to_rs FROM railway_segment WHERE from_rs=?);";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, id);

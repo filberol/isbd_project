@@ -4,8 +4,7 @@ import com.isbd.coursework.api.CompanyApi;
 import com.isbd.coursework.database.DbConnection;
 import com.isbd.coursework.entities.Company;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +28,7 @@ public class CompanyService implements CompanyApi {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, id);
             ResultSet set = st.executeQuery();
+            set.next();
             return Company.fromSet(set);
         } catch (SQLException e) {
             return null;
