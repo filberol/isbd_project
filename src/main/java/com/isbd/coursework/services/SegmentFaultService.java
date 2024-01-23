@@ -103,7 +103,7 @@ public class SegmentFaultService implements SegmentFaultApi {
     @Override
     public List<SegmentFault> getNotRepairedCriticalFaults() {
         String selectStatement = "SELECT * FROM segment_fault WHERE " +
-                "fault_class='critical' AND fault_status='not_repaired'";
+                "fault_class='critical' AND fault_status='not_repaired';";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             List<SegmentFault> faults = new ArrayList<>();
@@ -116,4 +116,23 @@ public class SegmentFaultService implements SegmentFaultApi {
             return null;
         }
     }
+
+    @Override
+    public List<SegmentFault> getFaultsCloseToStation(Integer stationId) {
+        String selectStatement = "SELECT * FROM segment_fault WHERE " +
+                "rw_seg_id in (SELECT id FROM railway_segment WHERE from_rs=?);";
+        try {
+            PreparedStatement st = db.prepareStatement(selectStatement);
+            st.setInt(1, stationId);
+            List<SegmentFault> faults = new ArrayList<>();
+            ResultSet set = st.executeQuery();
+            while (set.next()) {
+                faults.add(SegmentFault.fromSet(set));
+            }
+            return faults;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
 }

@@ -18,7 +18,7 @@
             <h3>Warehouse</h3>
             <div>Resources available: ${warehouse.resourceAvailableKm()}</div>
             <div class="table-container">
-                <h4>Resource allocation</h4>
+                <h4>Last resource allocation</h4>
                 <jsp:include page="resource_allocation.jsp">
                     <jsp:param name="page" value="1"/>
                 </jsp:include>
@@ -39,21 +39,33 @@
     </div>
     <div id="center">
         <div id="search-bar1">
-            <form method="get" action="/home">
-                <label for="station_search">Station name</label>
-                <input type="text" id="station_search" name="stationName" placeholder="Type station name">
-                <button type="submit">Search</button>
-            </form>
-        </div>
-        <div id="search-bar2">
-            <label for="brigade_search">Brigade name</label>
-            <input type="text" id="brigade_search" placeholder="Type brigade name">
+            <jsp:include page="station_search.jsp"/>
         </div>
         <div id="canvas">
             <svg width="550" height="550"></svg>
         </div>
     </div>
-    <div id="right-panel"></div>
+    <div id="right-panel">
+        <h2>Info for brigades</h2>
+        <hr/>
+        <c:if test="${closeFaults != null}">
+            <h3>Segment faults on closest railways</h3>
+            <div class="table-container">
+                <jsp:include page="segment_faults.jsp">
+                    <jsp:param name="page" value="1"/>
+                </jsp:include>
+            </div>
+        </c:if>
+        <hr/>
+        <c:if test="${criticalFaults != null}">
+            <h3>Critical not repaired faults</h3>
+            <div class="table-container" style="max-height: 400px">
+                <jsp:include page="critical_faults.jsp">
+                    <jsp:param name="page" value="1"/>
+                </jsp:include>
+            </div>
+        </c:if>
+    </div>
 </div>
 
 <jsp:include page="graph_script.jsp"/>

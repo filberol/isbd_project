@@ -1,5 +1,6 @@
 <%@ page import="com.isbd.coursework.entities.dto.TeamRouteDescription" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Collections" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
@@ -7,10 +8,15 @@
 
 
 <%
-    int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-    int startIndex = (currentPage - 1) * 5;
-    int endIndex = Math.min(startIndex + 5, routes.size());
-    List<TeamRouteDescription> currentPageItems = routes.subList(startIndex, endIndex);
+    List<TeamRouteDescription> currentPageItems = Collections.emptyList();
+    int startIndex = 0;
+    int endIndex = 0;
+    try {
+        int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
+        startIndex = Math.min((currentPage - 1) * 5, routes.size() - 1);
+        endIndex = Math.min(startIndex + 5, routes.size() - 1);
+        currentPageItems = routes.subList(startIndex, endIndex);
+    } catch (IndexOutOfBoundsException ignored) { }
 %>
 
 
@@ -27,15 +33,15 @@
     </thead>
     <tbody>
 
-    <% for (int i = startIndex; i < endIndex; i++) { %>
-        <tr>
-            <td><%= currentPageItems.get(i).repairTeamId() %></td>
-            <td><%= currentPageItems.get(i).routeId() %></td>
-            <td><%= currentPageItems.get(i).plannedAt() %></td>
-            <td><%= currentPageItems.get(i).departedAt() %></td>
-            <td><%= currentPageItems.get(i).arrivedAt() %></td>
-            <td><%= currentPageItems.get(i).name() %></td>
-        </tr>
+    <% for (TeamRouteDescription currentPageItem : currentPageItems) { %>
+    <tr>
+        <td><%= currentPageItem.repairTeamId() %></td>
+        <td><%= currentPageItem.routeId() %></td>
+        <td><%= currentPageItem.plannedAt() %></td>
+        <td><%= currentPageItem.departedAt() %></td>
+        <td><%= currentPageItem.arrivedAt() %></td>
+        <td><%= currentPageItem.name() %></td>
+    </tr>
     <% } %>
     </tbody>
 </table>

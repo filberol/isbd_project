@@ -14,4 +14,5 @@ public interface SegmentFaultApi {
             Integer segmentId, FaultStatus faultStatus, FaultClass faultClass
     );
     List<SegmentFault> getNotRepairedCriticalFaults();
+    List<SegmentFault> getFaultsCloseToStation(Integer stationId);
 }

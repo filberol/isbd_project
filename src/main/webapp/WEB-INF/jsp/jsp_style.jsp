@@ -31,8 +31,7 @@
     flex-direction: column;
   }
 
-  #search-bar1,
-  #search-bar2 {
+  #search-bar1 {
     padding: 5px;
     display: flex;
     align-items: center;
