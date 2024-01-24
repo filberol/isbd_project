@@ -48,7 +48,7 @@
     <div id="right-panel">
         <h2>Info for brigades</h2>
         <hr/>
-        <c:if test="${closeFaults != null}">
+        <c:if test="${closeFaults != null && closeFaults.size() != 0}">
             <h3>Segment faults on closest railways</h3>
             <div class="table-container">
                 <jsp:include page="segment_faults.jsp">

@@ -26,7 +26,9 @@ public class WarehouseProcesses {
 
     @PostMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<String> addWarehouse(@RequestParam String stationName) {
+    public ResponseEntity<String> addWarehouse(
+            @RequestParam String stationName
+    ) {
         String insertStatement =
                 "insert into warehouse(station_id, resources_available_km) values (?, 0);";
         String selectStatement = "select id from railway_station where name = ?;";

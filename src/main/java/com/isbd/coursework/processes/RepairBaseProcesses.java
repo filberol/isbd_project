@@ -26,7 +26,9 @@ public class RepairBaseProcesses {
 
     @PostMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<String> addRepairBase(@RequestParam String stationName) {
+    public ResponseEntity<String> addRepairBase(
+            @RequestParam String stationName
+    ) {
         String insertStatement =
                 "insert into repair_base(station_id, size_teams, curr_teams_hosted) values (?, 0, 0);";
         String selectStatement = "select id from railway_station where name = ?;";
