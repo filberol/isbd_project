@@ -1,8 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <style>
+
   body {
-    margin: 0;
-    padding: 0;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+  }
+
+  button {
+      display: inline-block;
+      padding: 5px 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      background-color: #3498db;
+      transition: background-color 0.3s;
+  }
+
+  button:hover {
+      background-color: #2980b9;
   }
 
   #container {
@@ -57,7 +80,7 @@
   th, td {
       border: 1px solid black;
       text-align: left;
-      padding: 8px;
+      padding: 4px;
   }
 
   tr:nth-child(even) {

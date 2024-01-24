@@ -26,7 +26,7 @@ public class ResourceAllocationProcesses {
     public ResponseEntity<String> newWarehouseResourceAllocation(
             @RequestParam String stationName,
             @RequestParam Integer resourcesKm,
-            @RequestParam Timestamp allocatedAt
+            @RequestParam String allocatedAt
     ) {
         String updateStatement =
                 "insert into warehouse_resource_allocation(warehouse_id, resources_allocated_km, allocated_at) values (?, ?, ?);";
@@ -41,7 +41,7 @@ public class ResourceAllocationProcesses {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, warehouseId);
             updSt.setInt(2, resourcesKm);
-            updSt.setTimestamp(3, allocatedAt);
+            updSt.setTimestamp(3, Timestamp.valueOf(allocatedAt.replace("T"," ")));
             updSt.executeUpdate();
             System.out.println("Allocated resources for " + stationName);
             return new ResponseEntity<>(HttpStatus.OK);

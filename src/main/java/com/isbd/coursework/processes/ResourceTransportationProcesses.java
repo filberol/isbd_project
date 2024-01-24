@@ -28,7 +28,7 @@ public class ResourceTransportationProcesses {
             @RequestParam String fromStation,
             @RequestParam String toStation,
             @RequestParam Integer resourceKm,
-            @RequestParam Timestamp start
+            @RequestParam String start
     ) {
         String updateStatement =
                 "insert into resource_transportation(from_warehouse_id, to_warehouse_id, start_at, resources_transportation_km) values (?, ?, ?, ?);";
@@ -48,7 +48,7 @@ public class ResourceTransportationProcesses {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, fromId);
             updSt.setInt(2, toId);
-            updSt.setTimestamp(3, start);
+            updSt.setTimestamp(3, Timestamp.valueOf(start.replace("T"," ")));
             updSt.setInt(4, resourceKm);
             updSt.executeUpdate();
             System.out.println("Started transportation from " + fromStation);
@@ -64,12 +64,12 @@ public class ResourceTransportationProcesses {
     @RequestMapping("/finish")
     public ResponseEntity<String> finishResourceTransportation(
             @RequestParam Integer transportationId,
-            @RequestParam Timestamp finish
+            @RequestParam String finish
     ) {
         String updateStatement = "update resource_transportation set finish_at = ? where id = ?;";
         try {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
-            updSt.setTimestamp(1, finish);
+            updSt.setTimestamp(1, Timestamp.valueOf(finish.replace("T"," ")));
             updSt.setInt(2, transportationId);
             updSt.executeUpdate();
             System.out.println("Finished transportation " + transportationId);

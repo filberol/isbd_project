@@ -32,7 +32,7 @@ public class InspectionRepairProcesses {
     public ResponseEntity<String> addSiteFaultFixation(
             @RequestParam Integer segFaultId,
             @RequestParam Integer routeId,
-            @RequestParam Timestamp found,
+            @RequestParam String found,
             @RequestParam String faultClass
     ) {
         String updateStatement =
@@ -41,7 +41,7 @@ public class InspectionRepairProcesses {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, segFaultId);
             updSt.setInt(2, routeId);
-            updSt.setTimestamp(3, found);
+            updSt.setTimestamp(3, Timestamp.valueOf(found.replace("T"," ")));
             updSt.setString(4, FaultClass.valueOf(faultClass).name());
             updSt.executeUpdate();
             System.out.println("Add fault fixation for " + segFaultId);
@@ -59,7 +59,7 @@ public class InspectionRepairProcesses {
             @RequestParam Integer routeId,
             @RequestParam Integer rwSegId,
             @RequestParam Integer positionKm,
-            @RequestParam Timestamp arrivedAt,
+            @RequestParam String arrivedAt,
             @RequestParam String typeSite
     ) {
         String updateStatement =
@@ -69,7 +69,7 @@ public class InspectionRepairProcesses {
             updSt.setInt(1, routeId);
             updSt.setInt(2, rwSegId);
             updSt.setInt(3, positionKm);
-            updSt.setTimestamp(4, arrivedAt);
+            updSt.setTimestamp(4, Timestamp.valueOf(arrivedAt.replace("T"," ")));
             updSt.setString(5, SiteVisitType.valueOf(typeSite).name());
             updSt.executeUpdate();
             System.out.println("Add site for route " + routeId);

@@ -25,7 +25,9 @@ public class CompanyProcesses {
 
     @PostMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<String> addCompany(@RequestParam String name) {
+    public ResponseEntity<String> addCompany(
+            @RequestParam String name
+    ) {
         String insertStatement = "INSERT INTO company(name) VALUES (?);";
         try {
             PreparedStatement st = db.prepareStatement(insertStatement);

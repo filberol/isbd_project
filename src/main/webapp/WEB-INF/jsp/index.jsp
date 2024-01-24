@@ -36,6 +36,8 @@
                 </jsp:include>
             </div>
         </c:if>
+        <hr/>
+        <button onclick="window.location.href='/admin/panel'">Admin panel</button>
     </div>
     <div id="center">
         <div id="search-bar1">
@@ -65,6 +67,9 @@
                 </jsp:include>
             </div>
         </c:if>
+        <hr/>
+        <button onclick="window.location.href='/api/brigade/routes'">Manage routes</button>
+        <button onclick="window.location.href='/api/brigade/resources'">Manage resources</button>
     </div>
 </div>
 

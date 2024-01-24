@@ -63,7 +63,7 @@ public class SegmentFaultProcesses {
             @RequestParam String faultClass,
             @RequestParam Integer positionKm,
             @RequestParam Integer routeId,
-            @RequestParam Timestamp found,
+            @RequestParam String found,
             @RequestParam String faultStatus
     ) {
         ResponseEntity<String> res = addSegmentFault(railwaySegmentId, faultClass, positionKm, faultStatus);

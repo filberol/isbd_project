@@ -28,7 +28,7 @@ public class RepairTeamRoutesProcesses {
             @RequestParam Integer teamId,
             @RequestParam String fromStation,
             @RequestParam String toStation,
-            @RequestParam Timestamp planAt
+            @RequestParam String planAt
     ) {
         String insertStatement =
                 "insert into repair_team_route(repair_team_id, from_base_id, to_base_id) values (?, ?, ?);";
@@ -62,7 +62,7 @@ public class RepairTeamRoutesProcesses {
             int routeId = findSet.getInt("max");
             PreparedStatement insSt = db.prepareStatement(insertStatement2);
             insSt.setInt(1, routeId);
-            insSt.setTimestamp(2, planAt);
+            insSt.setTimestamp(2, Timestamp.valueOf(planAt.replace("T"," ")));
             insSt.executeUpdate();
             System.out.println("Planned route from " + fromStation);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -77,7 +77,7 @@ public class RepairTeamRoutesProcesses {
     @RequestMapping("/finish")
     public ResponseEntity<String> finishRepairTeamRoute(
             @RequestParam Integer teamId,
-            @RequestParam Timestamp arrived
+            @RequestParam String arrived
     ) {
         String insertStatement =
                 "update repair_team_route_schedule set arrived_at = ? where route_id = ?;";
@@ -90,7 +90,7 @@ public class RepairTeamRoutesProcesses {
             setFrom.next();
             int routeId = setFrom.getInt("id");
             PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setTimestamp(1, arrived);
+            updSt.setTimestamp(1, Timestamp.valueOf(arrived.replace("T"," ")));
             updSt.setInt(2, routeId);
             updSt.executeUpdate();
             System.out.println("Finished route " + routeId);
@@ -106,7 +106,7 @@ public class RepairTeamRoutesProcesses {
     @RequestMapping("/start")
     public ResponseEntity<String> startRepairTeamRoute(
             @RequestParam Integer teamId,
-            @RequestParam Timestamp departed
+            @RequestParam String departed
     ) {
         String insertStatement =
                 "update repair_team_route_schedule set departed_at = ? where route_id = ?;";
@@ -119,7 +119,7 @@ public class RepairTeamRoutesProcesses {
             setFrom.next();
             int routeId = setFrom.getInt("id");
             PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setTimestamp(1, departed);
+            updSt.setTimestamp(1, Timestamp.valueOf(departed.replace("T"," ")));
             updSt.setInt(2, routeId);
             updSt.executeUpdate();
             System.out.println("Started route " + routeId);
