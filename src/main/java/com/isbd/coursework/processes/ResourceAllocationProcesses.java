@@ -29,18 +29,9 @@ public class ResourceAllocationProcesses {
             @RequestParam Integer resourcesKm,
             @RequestParam LocalDateTime allocatedAt
     ) {
-//        String updateStatement =
-//                "insert into warehouse_resource_allocation(warehouse_id, resources_allocated_km, allocated_at) values (?, ?, ?);";
-//        String selectStatement =
-//                "select id from warehouse where station_id = (select id from railway_station where name = ?);";
         try {
             CallableStatement selSt = db.prepareCall("{ call new_warehouse_resource_allocation(?,?,?)}");
             selSt.setString(1, stationName);
-//            ResultSet set = selSt.executeQuery();
-//            set.next();
-//            int warehouseId = set.getInt("id");
-//            PreparedStatement updSt = db.prepareStatement(updateStatement);
-//            updSt.setInt(1, warehouseId);
             selSt.setInt(2, resourcesKm);
             selSt.setTimestamp(3, Timestamp.valueOf(allocatedAt));
             selSt.execute();
