@@ -10,6 +10,4 @@ public interface RepairTeamRoutesApi {
     List<RepairTeamRoute> getTeamRoutesFromBase(Integer baseId);
     List<RepairTeamRoute> getTeamRoutesToBase(Integer baseId);
     List<TeamRouteDescription> getTeamRouteDescriptionsFromBase(Integer baseId);
-    List<TeamRouteDescription> getTeamRoutesDescriptionsByTeamId(Integer teamId);
-
 }

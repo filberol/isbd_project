@@ -37,7 +37,7 @@ public class WarehouseService implements WarehouseApi {
     @Override
     public List<WarehouseResourceAllocation> getResourceAllocations(Integer warehouseId) {
         if (warehouseId == 0) return null;
-        String selectStatement = "SELECT * FROM warehouse_resource_allocation WHERE warehouse_id=? order by allocated_at desc ;";
+        String selectStatement = "SELECT * FROM warehouse_resource_allocation WHERE warehouse_id=? order by allocated_at;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, warehouseId);
@@ -56,7 +56,7 @@ public class WarehouseService implements WarehouseApi {
     public List<WarehouseResourceAllocation> getResourceAllocationsBetween(Integer warehouseId, Timestamp from, Timestamp to) {
         if (warehouseId == 0) return null;
         String selectStatement = "SELECT * FROM warehouse_resource_allocation WHERE warehouse_id=? " +
-                "AND allocated_at > ? AND allocated_at < ? order by allocated_at desc;";
+                "AND allocated_at > ? AND allocated_at < ?;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, warehouseId);

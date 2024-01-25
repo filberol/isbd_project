@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Controller
 @RequestMapping("/admin/company")
@@ -25,14 +23,11 @@ public class CompanyProcesses {
 
     @PostMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<String> addCompany(
-            @RequestParam String name
-    ) {
-        String insertStatement = "INSERT INTO company(name) VALUES (?);";
+    public ResponseEntity<String> addCompany(@RequestParam String name) {
         try {
-            PreparedStatement st = db.prepareStatement(insertStatement);
+            CallableStatement st = db.prepareCall("{ call add_company(?)}");
             st.setString(1, name);
-            st.executeUpdate();
+            st.execute();
             System.out.println("Inserted company name " + name);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {

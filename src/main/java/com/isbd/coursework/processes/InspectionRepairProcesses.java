@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/brigade/route_site")
@@ -29,18 +30,22 @@ public class InspectionRepairProcesses {
     public ResponseEntity<String> addSiteFaultFixation(
             @RequestParam Integer segFaultId,
             @RequestParam Integer routeId,
-            @RequestParam String found,
+            @RequestParam LocalDateTime found,
             @RequestParam String faultClass
     ) {
-        String updateStatement =
-                "insert into site_fault_fixation (segment_fault_id, route_id, found_at, fault_class) values (?, ?, ?, ?);";
+//        String updateStatement =
+//                "insert into site_fault_fixation (segment_fault_id, route_id, found_at, fault_class) values (?, ?, ?, ?);";
         try {
-            PreparedStatement updSt = db.prepareStatement(updateStatement);
+
+            CallableStatement updSt = db.prepareCall("{? = call add_site_fault_fixation(?,?,?,?)}");
             updSt.setInt(1, segFaultId);
             updSt.setInt(2, routeId);
-            updSt.setTimestamp(3, Timestamp.valueOf(found.replace("T"," ") + ":00"));
-            updSt.setObject(4, FaultClass.valueOf(faultClass).name(), Types.OTHER);
-            updSt.executeUpdate();
+            System.out.println(found);
+            System.out.println(faultClass);
+            updSt.setTimestamp(3, Timestamp.valueOf(found));
+            updSt.setString(4, FaultClass.valueOf(faultClass).name());
+            updSt.registerOutParameter(5, Types.INTEGER);
+            updSt.execute();
             System.out.println("Add fault fixation for " + segFaultId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -56,19 +61,18 @@ public class InspectionRepairProcesses {
             @RequestParam Integer routeId,
             @RequestParam Integer rwSegId,
             @RequestParam Integer positionKm,
-            @RequestParam String arrivedAt,
+            @RequestParam LocalDateTime arrivedAt,
             @RequestParam String typeSite
     ) {
-        String updateStatement =
-                "insert into inspection_repair_site(route_id, railway_segment_id, position_point_km, arrived_at, type_site_action) values (?, ?, ?, ?, ?);";
         try {
-            PreparedStatement updSt = db.prepareStatement(updateStatement);
+            CallableStatement updSt = db.prepareCall("{ call add_site(?, ?, ?, ?, ?)}");
             updSt.setInt(1, routeId);
             updSt.setInt(2, rwSegId);
             updSt.setInt(3, positionKm);
-            updSt.setTimestamp(4, Timestamp.valueOf(arrivedAt.replace("T"," ") + ":00"));
-            updSt.setObject(5, SiteVisitType.valueOf(typeSite).name(), Types.OTHER);
-            updSt.executeUpdate();
+            Timestamp timestamp = Timestamp.valueOf(arrivedAt);
+            updSt.setTimestamp(4, timestamp);
+            updSt.setString(5, SiteVisitType.valueOf(typeSite).name());
+            updSt.execute();
             System.out.println("Add site for route " + routeId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {

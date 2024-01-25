@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Controller
 @RequestMapping("/admin/team")
@@ -29,11 +26,10 @@ public class RepairTeamProcesses {
     public ResponseEntity<String> addRepairTeam(
             @RequestParam Integer ownerId
     ) {
-        String insertStatement = "insert into repair_team(owner_id) values (?);";
         try {
-            PreparedStatement st = db.prepareStatement(insertStatement);
+            CallableStatement st = db.prepareCall("{ call add_repair_team(?)}");
             st.setInt(1, ownerId);
-            st.executeUpdate();
+            st.execute();
             System.out.println("Inserted repair team for company " + ownerId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -49,12 +45,12 @@ public class RepairTeamProcesses {
             @RequestParam Integer teamId,
             @RequestParam String memberName
     ) {
-        String insertStatement = "insert into repair_team_member(name, repair_team_id) values (?, ?);";
         try {
-            PreparedStatement st = db.prepareStatement(insertStatement);
-            st.setString(1, memberName);
-            st.setInt(2, teamId);
-            st.executeUpdate();
+            CallableStatement st = db.prepareCall("{ call add_repair_team_member(?,?)}");
+            st.setInt(1, teamId);
+            st.setString(2, memberName);
+
+            st.execute();
             System.out.println("Inserted repair team member " + memberName);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -70,20 +66,11 @@ public class RepairTeamProcesses {
             @RequestParam Integer teamId,
             @RequestParam String memberName
     ) {
-        String updateStatement = "update repair_team_member set repair_team_id = ? where id = ?;";
-        String selectStatement =
-                "select id from repair_team_member where name = ? and repair_team_id = ?;";
         try {
-            PreparedStatement selSt = db.prepareStatement(selectStatement);
-            selSt.setString(1, memberName);
-            selSt.setInt(2, teamId);
-            ResultSet set = selSt.executeQuery();
-            set.next();
-            int memberId = set.getInt("id");
-            PreparedStatement updSt = db.prepareStatement(updateStatement);
-            updSt.setInt(1, teamId);
-            updSt.setInt(2, memberId);
-            updSt.executeUpdate();
+            PreparedStatement selSt = db.prepareCall("{call change_team_affiliation(?,?)}");
+            selSt.setInt(1, teamId);
+            selSt.setString(2, memberName);
+            selSt.execute();
             System.out.println("Updated team affiliation for member " + memberName);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -99,18 +86,11 @@ public class RepairTeamProcesses {
             @RequestParam Integer teamId,
             @RequestParam String memberName
     ) {
-        String updateStatement = "update repair_team set team_head_id=? where repair_team.id=?;";
-        String selectStatement = "select id from repair_team_member where name = ?;";
         try {
-            PreparedStatement selSt = db.prepareStatement(selectStatement);
-            selSt.setString(1, memberName);
-            ResultSet set = selSt.executeQuery();
-            set.next();
-            int memberId = set.getInt("id");
-            PreparedStatement updSt = db.prepareStatement(updateStatement);
-            updSt.setInt(1, memberId);
-            updSt.setInt(2, teamId);
-            updSt.executeUpdate();
+            CallableStatement selSt = db.prepareCall("{ call set_team_head(?,?)}");
+            selSt.setInt(1, teamId);
+            selSt.setString(2, memberName);
+            selSt.execute();
             System.out.println("Updated team head to " + memberName);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {

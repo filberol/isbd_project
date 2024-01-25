@@ -21,14 +21,14 @@ public class ResourceTransportationService implements ResourceTransportationApi 
     @Override
     public List<ResourceTransportation> getResourceTransportationsFromWarehouse(Integer warehouseId) {
         if (warehouseId == 0) return null;
-        String selectStatement = "SELECT * FROM resource_transportation WHERE from_warehouse_id=? order by start_at desc;";
+        String selectStatement = "SELECT * FROM resource_transportation WHERE from_warehouse_id=?;";
         return getResourceTransportations(warehouseId, selectStatement);
     }
 
     @Override
     public List<ResourceTransportation> getResourceTransportationsToWarehouse(Integer warehouseId) {
         if (warehouseId == 0) return null;
-        String selectStatement = "SELECT * FROM resource_transportation WHERE to_warehouse_id=? order by start_at desc;";
+        String selectStatement = "SELECT * FROM resource_transportation WHERE to_warehouse_id=?;";
         return getResourceTransportations(warehouseId, selectStatement);
     }
 
@@ -36,7 +36,7 @@ public class ResourceTransportationService implements ResourceTransportationApi 
     public List<ResourceTransportation> getResourceTransportationsFromWarehouse(Integer warehouseId, Timestamp from, Timestamp to) {
         if (warehouseId == 0) return null;
         String selectStatement = "SELECT * FROM resource_transportation WHERE from_warehouse_id=? " +
-                "AND start_at > ? AND finish_at < ? order by start_at desc;";
+                "AND start_at > ? AND finish_at < ?;";
         return getResourceTransportationsWithTime(warehouseId, from, to, selectStatement);
     }
 
@@ -44,7 +44,7 @@ public class ResourceTransportationService implements ResourceTransportationApi 
     public List<ResourceTransportation> getResourceTransportationsToWarehouse(Integer warehouseId, Timestamp from, Timestamp to) {
         if (warehouseId == 0) return null;
         String selectStatement = "SELECT * FROM resource_transportation WHERE to_warehouse_id=? " +
-                "AND start_at > ? AND finish_at < ? order by start_at desc;";
+                "AND start_at > ? AND finish_at < ?;";
         return getResourceTransportationsWithTime(warehouseId, from, to, selectStatement);
     }
 

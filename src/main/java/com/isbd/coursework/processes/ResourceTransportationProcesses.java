@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/brigade/resources/transport")
@@ -28,29 +29,16 @@ public class ResourceTransportationProcesses {
             @RequestParam String fromStation,
             @RequestParam String toStation,
             @RequestParam Integer resourceKm,
-            @RequestParam String start
+            @RequestParam LocalDateTime start
     ) {
-        String updateStatement =
-                "insert into resource_transportation(from_warehouse_id, to_warehouse_id, start_at, resources_transportation_km) values (?, ?, ?, ?);";
-        String selectStation =
-                "select id from warehouse where station_id = (select id from railway_station where name = ?);";
         try {
-            PreparedStatement selFrom = db.prepareStatement(selectStation);
-            PreparedStatement selTo = db.prepareStatement(selectStation);
-            selFrom.setString(1, fromStation);
-            selTo.setString(1, toStation);
-            ResultSet setFrom = selFrom.executeQuery();
-            ResultSet setTo = selTo.executeQuery();
-            setFrom.next();
-            setTo.next();
-            int fromId = setFrom.getInt("id");
-            int toId = setTo.getInt("id");
-            PreparedStatement updSt = db.prepareStatement(updateStatement);
-            updSt.setInt(1, fromId);
-            updSt.setInt(2, toId);
-            updSt.setTimestamp(3, Timestamp.valueOf(start.replace("T"," ") + ":00"));
-            updSt.setInt(4, resourceKm);
-            updSt.executeUpdate();
+            CallableStatement sel = db.prepareCall("{call start_resource_transportation(?,?,?,?)}");
+            sel.setString(1, fromStation);
+            sel.setString(2, toStation);
+            sel.setInt(3, resourceKm);
+            sel.setTimestamp(4, Timestamp.valueOf(start));
+
+            sel.execute();
             System.out.println("Started transportation from " + fromStation);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -64,14 +52,14 @@ public class ResourceTransportationProcesses {
     @RequestMapping("/finish")
     public ResponseEntity<String> finishResourceTransportation(
             @RequestParam Integer transportationId,
-            @RequestParam String finish
+            @RequestParam LocalDateTime finish
     ) {
-        String updateStatement = "update resource_transportation set finish_at = ? where id = ?;";
+
         try {
-            PreparedStatement updSt = db.prepareStatement(updateStatement);
-            updSt.setTimestamp(1, Timestamp.valueOf(finish.replace("T"," ") + ":00"));
-            updSt.setInt(2, transportationId);
-            updSt.executeUpdate();
+            CallableStatement updSt = db.prepareCall("{ call finish_resource_transportation(?,?)}");
+            updSt.setInt(1, transportationId);
+            updSt.setTimestamp(2, Timestamp.valueOf(finish));
+            updSt.execute();
             System.out.println("Finished transportation " + transportationId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
