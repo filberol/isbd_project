@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Controller
 @RequestMapping("/admin/segment")
@@ -32,18 +29,20 @@ public class RailwaySegmentProcesses {
             @RequestParam Integer toRs,
             @RequestParam Integer lengthKm
     ) {
-        String insertStatement = "INSERT INTO railway_segment(from_rs, to_rs, length_km) VALUES (?, ?, ?);";
+//        String insertStatement = "INSERT INTO railway_segment(from_rs, to_rs, length_km) VALUES (?, ?, ?);";
         try {
-            PreparedStatement st = db.prepareStatement(insertStatement);
+            CallableStatement st = db.prepareCall("{ call add_railway_segment(?,?,?)}");
             st.setInt(1, fromRs);
             st.setInt(2, toRs);
             st.setInt(3, lengthKm);
-            st.executeUpdate();
-            st = db.prepareStatement(insertStatement);
-            st.setInt(1, toRs);
-            st.setInt(2, fromRs);
-            st.setInt(3, lengthKm);
-            st.executeUpdate();
+//            st.registerOutParameter(4, Types.NULL);
+            st.execute();
+//            st = db.prepareCall("{? = call add_railway_segment(?,?,?)}");
+//            st.setInt(1, toRs);
+//            st.setInt(2, fromRs);
+//            st.setInt(3, lengthKm);
+//            st.registerOutParameter(4, Types.NULL);
+//            st.executeUpdate();
             System.out.println("Inserted segment from " + fromRs);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -60,29 +59,13 @@ public class RailwaySegmentProcesses {
             @RequestParam String toRs,
             @RequestParam Integer lengthKm
     ) {
-        String insertStatement = "INSERT INTO railway_segment(from_rs, to_rs, length_km) VALUES (?, ?, ?);";
-        String selectStatement = "SELECT id FROM railway_station WHERE name = ?;";
+
         try {
-            PreparedStatement from = db.prepareStatement(selectStatement);
-            from.setString(1, fromRs);
-            ResultSet fromSet = from.executeQuery();
-            fromSet.next();
-            int fromRsId = fromSet.getInt("id");
-            PreparedStatement to = db.prepareStatement(selectStatement);
-            to.setString(1, toRs);
-            ResultSet toSet = to.executeQuery();
-            toSet.next();
-            int toRsId = toSet.getInt("id");
-            PreparedStatement st1 = db.prepareStatement(insertStatement);
-            st1.setInt(1, fromRsId);
-            st1.setInt(2, toRsId);
-            st1.setInt(3, lengthKm);
-            st1.executeUpdate();
-            PreparedStatement st2 = db.prepareStatement(insertStatement);
-            st2.setInt(1, toRsId);
-            st2.setInt(2, fromRsId);
-            st2.setInt(3, lengthKm);
-            st2.executeUpdate();
+            CallableStatement st = db.prepareCall("{call add_railway_segment(?,?,?)}");
+            st.setString(1, fromRs);
+            st.setString(2, toRs);
+            st.setInt(3, lengthKm);
+            st.execute();
             System.out.println("Inserted segment from " + fromRs);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {

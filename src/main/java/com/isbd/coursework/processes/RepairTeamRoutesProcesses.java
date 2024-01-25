@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/brigade/route")
@@ -28,42 +29,15 @@ public class RepairTeamRoutesProcesses {
             @RequestParam Integer teamId,
             @RequestParam String fromStation,
             @RequestParam String toStation,
-            @RequestParam Timestamp planAt
+            @RequestParam LocalDateTime planAt
     ) {
-        String insertStatement =
-                "insert into repair_team_route(repair_team_id, from_base_id, to_base_id) values (?, ?, ?);";
-        String insertStatement2 =
-                "insert into repair_team_route_schedule(route_id, planned_at, departed_at, arrived_at) values (?, ?, null, null);";
-        String selectStation =
-                "select id from repair_base where station_id = (select id from railway_station where name = ?);";
-        String selectStatement2 =
-                "select max(id) from repair_team_route where repair_team_id = ? and from_base_id = ?;";
         try {
-            PreparedStatement selFrom = db.prepareStatement(selectStation);
-            PreparedStatement selTo = db.prepareStatement(selectStation);
-            selFrom.setString(1, fromStation);
-            selTo.setString(1, toStation);
-            ResultSet setFrom = selFrom.executeQuery();
-            ResultSet setTo = selTo.executeQuery();
-            setFrom.next();
-            setTo.next();
-            int fromId = setFrom.getInt("id");
-            int toId = setTo.getInt("id");
-            PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setInt(1, teamId);
-            updSt.setInt(2, fromId);
-            updSt.setInt(3, toId);
-            updSt.executeUpdate();
-            PreparedStatement findSt = db.prepareStatement(selectStatement2);
-            findSt.setInt(1, teamId);
-            findSt.setInt(2, fromId);
-            ResultSet findSet = findSt.executeQuery();
-            findSet.next();
-            int routeId = findSet.getInt("max");
-            PreparedStatement insSt = db.prepareStatement(insertStatement2);
-            insSt.setInt(1, routeId);
-            insSt.setTimestamp(2, planAt);
-            insSt.executeUpdate();
+            CallableStatement sel = db.prepareCall("{call appoint_route_for_repair_team(?,?,?,?)}");
+            sel.setInt(1, teamId);
+            sel.setString(2, fromStation);
+            sel.setString(3, toStation);
+            sel.setTimestamp(4, Timestamp.valueOf(planAt));
+            sel.execute();
             System.out.println("Planned route from " + fromStation);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -77,22 +51,14 @@ public class RepairTeamRoutesProcesses {
     @RequestMapping("/finish")
     public ResponseEntity<String> finishRepairTeamRoute(
             @RequestParam Integer teamId,
-            @RequestParam Timestamp arrived
+            @RequestParam LocalDateTime arrived
     ) {
-        String insertStatement =
-                "update repair_team_route_schedule set arrived_at = ? where route_id = ?;";
-        String selectStatement =
-                "select id from repair_team_route where repair_team_id = ?;";
         try {
-            PreparedStatement selFrom = db.prepareStatement(selectStatement);
-            selFrom.setInt(1, teamId);
-            ResultSet setFrom = selFrom.executeQuery();
-            setFrom.next();
-            int routeId = setFrom.getInt("id");
-            PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setTimestamp(1, arrived);
-            updSt.setInt(2, routeId);
-            updSt.executeUpdate();
+            CallableStatement sel = db.prepareCall("{? =  call finish_repair_team_route(?,?)}");
+            sel.setInt(1, teamId);
+            sel.setTimestamp(2, Timestamp.valueOf(arrived));
+            sel.registerOutParameter(3, Types.INTEGER);
+            int routeId = sel.executeUpdate();
             System.out.println("Finished route " + routeId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -106,22 +72,14 @@ public class RepairTeamRoutesProcesses {
     @RequestMapping("/start")
     public ResponseEntity<String> startRepairTeamRoute(
             @RequestParam Integer teamId,
-            @RequestParam Timestamp departed
+            @RequestParam LocalDateTime departed
     ) {
-        String insertStatement =
-                "update repair_team_route_schedule set departed_at = ? where route_id = ?;";
-        String selectStatement =
-                "select id from repair_team_route where repair_team_id = ?;";
         try {
-            PreparedStatement selFrom = db.prepareStatement(selectStatement);
-            selFrom.setInt(1, teamId);
-            ResultSet setFrom = selFrom.executeQuery();
-            setFrom.next();
-            int routeId = setFrom.getInt("id");
-            PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setTimestamp(1, departed);
-            updSt.setInt(2, routeId);
-            updSt.executeUpdate();
+            CallableStatement sel = db.prepareCall("{? = call start_repair_team_route(?,?)}");
+            sel.setInt(1, teamId);
+            sel.setTimestamp(2, Timestamp.valueOf(departed));
+            sel.registerOutParameter(3, Types.INTEGER);
+            int routeId = sel.executeUpdate();
             System.out.println("Started route " + routeId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {

@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Controller
 @RequestMapping("/admin/warehouse")
@@ -29,18 +26,10 @@ public class WarehouseProcesses {
     public ResponseEntity<String> addWarehouse(
             @RequestParam String stationName
     ) {
-        String insertStatement =
-                "insert into warehouse(station_id, resources_available_km) values (?, 0);";
-        String selectStatement = "select id from railway_station where name = ?;";
         try {
-            PreparedStatement sel = db.prepareStatement(selectStatement);
+            CallableStatement sel = db.prepareCall("{ call init_warehouse(?)}");
             sel.setString(1, stationName);
-            ResultSet set = sel.executeQuery();
-            set.next();
-            int id = set.getInt("id");
-            PreparedStatement insSt = db.prepareStatement(insertStatement);
-            insSt.setInt(1, id);
-            insSt.executeUpdate();
+            sel.execute();
             System.out.println("Inserted warehouse for station " + stationName);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {

@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Controller
 @RequestMapping("/admin/railway")
@@ -42,12 +39,11 @@ public class RailwayStationProcesses {
             @RequestParam String name,
             @RequestParam Integer ownerId
     ) {
-        String insertStatement = "INSERT INTO railway_station(name, owner_id) values (?, ?);";
         try {
-            PreparedStatement st = db.prepareStatement(insertStatement);
+            CallableStatement st = db.prepareCall("{call add_railway_station(?,?)}");
             st.setString(1, name);
             st.setInt(2, ownerId);
-            st.executeUpdate();
+            st.execute();
             System.out.println("Inserted rw station name " + name);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
@@ -63,18 +59,11 @@ public class RailwayStationProcesses {
             @RequestParam String name,
             @RequestParam String ownerName
     ) {
-        String insertStatement = "INSERT INTO railway_station(name, owner_id) values (?, ?);";
-        String selectStatement = "SELECT id FROM company WHERE company.name = ?;";
         try {
-            PreparedStatement selSt = db.prepareStatement(selectStatement);
-            selSt.setString(1, ownerName);
-            ResultSet set = selSt.executeQuery();
-            set.next();
-            int ownerId = set.getInt("id");
-            PreparedStatement insSt = db.prepareStatement(insertStatement);
+            CallableStatement insSt = db.prepareCall("{call add_railway_station(?,?)}");
             insSt.setString(1, name);
-            insSt.setInt(2, ownerId);
-            insSt.executeUpdate();
+            insSt.setString(2, ownerName);
+            insSt.execute();
             System.out.println("Inserted rw station name " + name);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
