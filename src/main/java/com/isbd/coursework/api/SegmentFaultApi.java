@@ -7,6 +7,7 @@ import com.isbd.coursework.entities.enums.FaultStatus;
 import java.util.List;
 
 public interface SegmentFaultApi {
+    SegmentFault getFaultById(Integer faultId);
     List<SegmentFault> getFaultsByRailwaySegmentId(Integer segmentId);
     List<SegmentFault> getFaultsByRailwaySegmentIdAndClass(Integer segmentId, FaultClass faultClass);
     List<SegmentFault> getFaultsByRailwaySegmentIdAndStatus(Integer segmentId, FaultStatus faultStatus);

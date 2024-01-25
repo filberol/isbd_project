@@ -328,7 +328,7 @@
     <button type="submit">Create</button>
 </form>
 
-<h3>Add segment fault on route</h3>
+<h3>Change fault status</h3>
 <form method="post" action="/brigade/fault/change" target="noredirect">
     <p>
         <label for="seg_fault_id2">Route id</label>

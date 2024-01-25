@@ -43,9 +43,9 @@ public class SegmentFaultProcesses {
         try {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, railwaySegmentId);
-            updSt.setString(2, FaultClass.valueOf(faultClass).name());
+            updSt.setObject(2, FaultClass.valueOf(faultClass).name(), Types.OTHER);
             updSt.setInt(3, positionKm);
-            updSt.setString(4, FaultStatus.valueOf(faultStatus).name());
+            updSt.setObject(4, FaultStatus.valueOf(faultStatus).name(), Types.OTHER);
             updSt.executeUpdate();
             System.out.println("Add fault for " + railwaySegmentId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -69,7 +69,7 @@ public class SegmentFaultProcesses {
         ResponseEntity<String> res = addSegmentFault(railwaySegmentId, faultClass, positionKm, faultStatus);
         if (res.getStatusCode() == HttpStatus.BAD_REQUEST) return res;
         String selectStatement =
-                "select max(id) from segment_fault where rw_seg_id = ? and position_km = ?;";
+                "select max(id) from segment_fault where rw_seg_id = ? and position_point_km = ?;";
         try {
             PreparedStatement findSt = db.prepareStatement(selectStatement);
             findSt.setInt(1, railwaySegmentId);
@@ -80,7 +80,7 @@ public class SegmentFaultProcesses {
             ResponseEntity<String> res2 =
                     inspectionRepairProcesses.addSiteFaultFixation(faultId, routeId, found, faultClass);
             if (res2.getStatusCode() == HttpStatus.BAD_REQUEST) return res2;
-            System.out.println("Add fault and fixation fo route " + routeId);
+            System.out.println("Add fault and fixation for route " + routeId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
             System.out.println(e.getMessage());

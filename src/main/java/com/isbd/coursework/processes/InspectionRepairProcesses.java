@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 @Controller
 @RequestMapping("/brigade/route_site")
@@ -42,7 +39,7 @@ public class InspectionRepairProcesses {
             updSt.setInt(1, segFaultId);
             updSt.setInt(2, routeId);
             updSt.setTimestamp(3, Timestamp.valueOf(found.replace("T"," ") + ":00"));
-            updSt.setString(4, FaultClass.valueOf(faultClass).name());
+            updSt.setObject(4, FaultClass.valueOf(faultClass).name(), Types.OTHER);
             updSt.executeUpdate();
             System.out.println("Add fault fixation for " + segFaultId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -70,7 +67,7 @@ public class InspectionRepairProcesses {
             updSt.setInt(2, rwSegId);
             updSt.setInt(3, positionKm);
             updSt.setTimestamp(4, Timestamp.valueOf(arrivedAt.replace("T"," ") + ":00"));
-            updSt.setString(5, SiteVisitType.valueOf(typeSite).name());
+            updSt.setObject(5, SiteVisitType.valueOf(typeSite).name(), Types.OTHER);
             updSt.executeUpdate();
             System.out.println("Add site for route " + routeId);
             return new ResponseEntity<>(HttpStatus.OK);

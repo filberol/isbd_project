@@ -24,7 +24,7 @@ public class SiteFaultFixationService implements SiteFaultFixationApi {
     @Override
     public List<SiteFaultFixation> getFixationsByRouteId(Integer routeId) {
         if (routeId == 0) return null;
-        String selectStatement = "SELECT * FROM site_fault_fixation WHERE route_id=?;";
+        String selectStatement = "SELECT * FROM site_fault_fixation WHERE route_id=? order by found_at desc;";
         try {
             PreparedStatement st = db.prepareStatement(selectStatement);
             st.setInt(1, routeId);

@@ -24,6 +24,21 @@ public class SegmentFaultService implements SegmentFaultApi {
     }
 
     @Override
+    public SegmentFault getFaultById(Integer faultId) {
+        if (faultId == 0) return null;
+        String selectStatement = "SELECT * FROM segment_fault WHERE id=?;";
+        try {
+            PreparedStatement st = db.prepareStatement(selectStatement);
+            st.setInt(1, faultId);
+            ResultSet set = st.executeQuery();
+            set.next();
+            return SegmentFault.fromSet(set);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<SegmentFault> getFaultsByRailwaySegmentId(Integer segmentId) {
         if (segmentId == 0) return null;
         String selectStatement = "SELECT * FROM segment_fault WHERE rw_seg_id=?;";

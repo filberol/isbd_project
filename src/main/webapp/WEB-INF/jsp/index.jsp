@@ -70,6 +70,7 @@
         <hr/>
         <button onclick="window.location.href='/api/brigade/routes'">Manage routes</button>
         <button onclick="window.location.href='/api/brigade/resources'">Manage resources</button>
+        <button onclick="window.location.href='/api/brigade/faults'">Manage faults</button>
     </div>
 </div>
 
