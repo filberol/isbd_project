@@ -48,7 +48,7 @@ public class ResourceTransportationProcesses {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, fromId);
             updSt.setInt(2, toId);
-            updSt.setTimestamp(3, Timestamp.valueOf(start.replace("T"," ")));
+            updSt.setTimestamp(3, Timestamp.valueOf(start.replace("T"," ") + ":00"));
             updSt.setInt(4, resourceKm);
             updSt.executeUpdate();
             System.out.println("Started transportation from " + fromStation);
@@ -69,7 +69,7 @@ public class ResourceTransportationProcesses {
         String updateStatement = "update resource_transportation set finish_at = ? where id = ?;";
         try {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
-            updSt.setTimestamp(1, Timestamp.valueOf(finish.replace("T"," ")));
+            updSt.setTimestamp(1, Timestamp.valueOf(finish.replace("T"," ") + ":00"));
             updSt.setInt(2, transportationId);
             updSt.executeUpdate();
             System.out.println("Finished transportation " + transportationId);

@@ -11,7 +11,8 @@
 
   button {
       display: inline-block;
-      padding: 5px 5px;
+      padding: 5px;
+      margin: 5px;
       font-size: 16px;
       font-weight: bold;
       text-align: center;

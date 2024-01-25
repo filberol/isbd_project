@@ -41,7 +41,7 @@ public class InspectionRepairProcesses {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, segFaultId);
             updSt.setInt(2, routeId);
-            updSt.setTimestamp(3, Timestamp.valueOf(found.replace("T"," ")));
+            updSt.setTimestamp(3, Timestamp.valueOf(found.replace("T"," ") + ":00"));
             updSt.setString(4, FaultClass.valueOf(faultClass).name());
             updSt.executeUpdate();
             System.out.println("Add fault fixation for " + segFaultId);
@@ -69,7 +69,7 @@ public class InspectionRepairProcesses {
             updSt.setInt(1, routeId);
             updSt.setInt(2, rwSegId);
             updSt.setInt(3, positionKm);
-            updSt.setTimestamp(4, Timestamp.valueOf(arrivedAt.replace("T"," ")));
+            updSt.setTimestamp(4, Timestamp.valueOf(arrivedAt.replace("T"," ") + ":00"));
             updSt.setString(5, SiteVisitType.valueOf(typeSite).name());
             updSt.executeUpdate();
             System.out.println("Add site for route " + routeId);

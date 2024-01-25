@@ -62,7 +62,7 @@ public class RepairTeamRoutesProcesses {
             int routeId = findSet.getInt("max");
             PreparedStatement insSt = db.prepareStatement(insertStatement2);
             insSt.setInt(1, routeId);
-            insSt.setTimestamp(2, Timestamp.valueOf(planAt.replace("T"," ")));
+            insSt.setTimestamp(2, Timestamp.valueOf(planAt.replace("T"," ") + ":00"));
             insSt.executeUpdate();
             System.out.println("Planned route from " + fromStation);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -82,7 +82,9 @@ public class RepairTeamRoutesProcesses {
         String insertStatement =
                 "update repair_team_route_schedule set arrived_at = ? where route_id = ?;";
         String selectStatement =
-                "select id from repair_team_route where repair_team_id = ?;";
+                "select repair_team_route.id from repair_team_route join repair_team_route_schedule on " +
+                        "repair_team_route.id = repair_team_route_schedule.route_id" +
+                        " where repair_team_id = ? and repair_team_route_schedule.arrived_at is null;";
         try {
             PreparedStatement selFrom = db.prepareStatement(selectStatement);
             selFrom.setInt(1, teamId);
@@ -90,7 +92,7 @@ public class RepairTeamRoutesProcesses {
             setFrom.next();
             int routeId = setFrom.getInt("id");
             PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setTimestamp(1, Timestamp.valueOf(arrived.replace("T"," ")));
+            updSt.setTimestamp(1, Timestamp.valueOf(arrived.replace("T"," ") + ":00"));
             updSt.setInt(2, routeId);
             updSt.executeUpdate();
             System.out.println("Finished route " + routeId);
@@ -111,7 +113,9 @@ public class RepairTeamRoutesProcesses {
         String insertStatement =
                 "update repair_team_route_schedule set departed_at = ? where route_id = ?;";
         String selectStatement =
-                "select id from repair_team_route where repair_team_id = ?;";
+                "select repair_team_route.id from repair_team_route join repair_team_route_schedule on " +
+                        "repair_team_route.id = repair_team_route_schedule.route_id" +
+                        " where repair_team_id = ? and repair_team_route_schedule.departed_at is null;";
         try {
             PreparedStatement selFrom = db.prepareStatement(selectStatement);
             selFrom.setInt(1, teamId);
@@ -119,7 +123,7 @@ public class RepairTeamRoutesProcesses {
             setFrom.next();
             int routeId = setFrom.getInt("id");
             PreparedStatement updSt = db.prepareStatement(insertStatement);
-            updSt.setTimestamp(1, Timestamp.valueOf(departed.replace("T"," ")));
+            updSt.setTimestamp(1, Timestamp.valueOf(departed.replace("T"," ") + ":00"));
             updSt.setInt(2, routeId);
             updSt.executeUpdate();
             System.out.println("Started route " + routeId);

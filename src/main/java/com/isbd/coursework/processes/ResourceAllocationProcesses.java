@@ -41,7 +41,7 @@ public class ResourceAllocationProcesses {
             PreparedStatement updSt = db.prepareStatement(updateStatement);
             updSt.setInt(1, warehouseId);
             updSt.setInt(2, resourcesKm);
-            updSt.setTimestamp(3, Timestamp.valueOf(allocatedAt.replace("T"," ")));
+            updSt.setTimestamp(3, Timestamp.valueOf(allocatedAt.replace("T"," ") + ":00"));
             updSt.executeUpdate();
             System.out.println("Allocated resources for " + stationName);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -1,9 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <html>
 <head>
-    <title>Repair team routes page</title>
+    <title>Resource allocations for base</title>
     <jsp:include page="jsp_style.jsp"/>
 </head>
 <body style="padding: 10px">
@@ -28,11 +28,11 @@
             </p>
             <p>
                 <label for="from_station_id2">From station</label>
-                <input type="number" id="from_station_id2" name="fromStation" required>
+                <input type="text" id="from_station_id2" name="fromStation" required>
             </p>
             <p>
                 <label for="to_station_id2">To station</label>
-                <input type="number" id="to_station_id2" name="toStation" required>
+                <input type="text" id="to_station_id2" name="toStation" required>
             </p>
             <p>
                 <label for="plan_at">Plan at</label>

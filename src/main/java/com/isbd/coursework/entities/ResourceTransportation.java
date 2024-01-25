@@ -9,7 +9,8 @@ public record ResourceTransportation(
         Integer fromWarehouseId,
         Integer toWarehouseId,
         Timestamp startAt,
-        Timestamp finishAt
+        Timestamp finishAt,
+        Integer resourceTransportationKm
 ) {
     public static ResourceTransportation fromSet(ResultSet set) throws SQLException {
         return new ResourceTransportation(
@@ -17,7 +18,8 @@ public record ResourceTransportation(
                 set.getInt("from_warehouse_id"),
                 set.getInt("to_warehouse_id"),
                 set.getTimestamp("start_at"),
-                set.getTimestamp("finish_at")
+                set.getTimestamp("finish_at"),
+                set.getInt("resources_transportation_km")
         );
     }
 }
